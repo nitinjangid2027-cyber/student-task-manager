@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Student Task Manager</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f5f7fa,
+                    #e4e9f0
+                );
+
+            min-height: 100vh;
+
+            padding: 40px 20px;
+
+            color: #222;
+        }
+
+
+        .container {
+
+            width: 100%;
+
+            max-width: 850px;
+
+            margin: auto;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .header h1 {
+
+            font-size: 38px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .header p {
+
+            color: #666;
+
+            font-size: 16px;
+        }
+
+
+        /* =========================
+           STATS
+        ========================== */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .stat-card {
+
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 14px;
+
+            text-align: center;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0, 0, 0, 0.08);
+        }
+
+
+        .stat-number {
+
+            font-size: 28px;
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+        }
+
+
+        .stat-label {
+
+            color: #777;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           MAIN CARD
+        ========================== */
+
+        .card {
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 30px
+                rgba(0, 0, 0, 0.10);
+
+            margin-bottom: 25px;
+        }
+
+
+        .card-title {
+
+            font-size: 22px;
+
+            margin-bottom: 20px;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           FORM
+        ========================== */
+
+        form {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+
+        input,
+        textarea,
+        select {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: 1px solid #d5d5d5;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+
+            border-color: #555;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(0, 0, 0, 0.05);
+        }
+
+
+        textarea {
+
+            min-height: 110px;
+
+            resize: vertical;
+        }
+
+
+        .add-button {
+
+            border: none;
+
+            padding: 14px;
+
+            border-radius: 9px;
+
+            background: #222;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .add-button:hover {
+
+            background: #444;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================
+           TASK LIST
+        ========================== */
+
+        .task {
+
+            border: 1px solid #e1e1e1;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            margin-bottom: 15px;
+
+            transition: 0.2s;
+        }
+
+
+        .task:hover {
+
+            box-shadow:
+                0 5px 15px
+                rgba(0, 0, 0, 0.07);
+        }
+
+
+        .task:last-child {
+
+            margin-bottom: 0;
+        }
+
+
+        .task-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .task-title {
+
+            font-size: 19px;
+
+            font-weight: bold;
+        }
+
+
+        .task-description {
+
+            color: #666;
+
+            line-height: 1.5;
+
+            margin-bottom: 15px;
+        }
+
+
+        /* =========================
+           BADGES
+        ========================== */
+
+        .badges {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .badge {
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+
+        .priority-low {
+
+            background: #e8f5e9;
+
+            color: #2e7d32;
+        }
+
+
+        .priority-medium {
+
+            background: #fff8e1;
+
+            color: #f57f17;
+        }
+
+
+        .priority-high {
+
+            background: #ffebee;
+
+            color: #c62828;
+        }
+
+
+        .status-pending {
+
+            background: #eeeeee;
+
+            color: #555;
+        }
+
+
+        .status-completed {
+
+            background: #e8f5e9;
+
+            color: #2e7d32;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================== */
+
+        .actions {
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+
+        .action-button {
+
+            padding: 9px 14px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+
+        .complete-button {
+
+            background: #e8f5e9;
+
+            color: #2e7d32;
+        }
+
+
+        .delete-button {
+
+            background: #ffebee;
+
+            color: #c62828;
+        }
+
+
+        .complete-button:hover {
+
+            background: #c8e6c9;
+        }
+
+
+        .delete-button:hover {
+
+            background: #ffcdd2;
+        }
+
+
+        /* =========================
+           EMPTY STATE
+        ========================== */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 35px 10px;
+
+            color: #777;
+        }
+
+
+        .empty-icon {
+
+            font-size: 40px;
+
+            margin-bottom: 10px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 25px 12px;
+            }
+
+
+            .header h1 {
+
+                font-size: 30px;
+            }
+
+
+            .stats {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .card {
+
+                padding: 20px;
+            }
+
+
+            .task-header {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            .actions {
+
+                flex-direction: column;
+            }
+
+
+            .action-button {
+
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>Student Task Manager</h1>
+
+        <p>
+            Organize your tasks and stay productive 🚀
+        </p>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+                {{ total_tasks }}
+            </div>
+
+            <div class="stat-label">
+                Total Tasks
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+                {{ pending_tasks }}
+            </div>
+
+            <div class="stat-label">
+                Pending
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+                {{ completed_tasks }}
+            </div>
+
+            <div class="stat-label">
+                Completed
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ADD TASK -->
+
+    <div class="card">
+
+
+        <div class="card-title">
+            Add New Task
+        </div>
+
+
+        <form action="/add" method="POST">
+
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Task title"
+                required
+            >
+
+
+            <textarea
+                name="description"
+                placeholder="Task description"
+            ></textarea>
+
+
+            <select name="priority">
+
+                <option value="Low">
+                    Low Priority
+                </option>
+
+                <option value="Medium" selected>
+                    Medium Priority
+                </option>
+
+                <option value="High">
+                    High Priority
+                </option>
+
+            </select>
+
+
+            <button
+                type="submit"
+                class="add-button"
+            >
+                + Add Task
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+    <!-- TASKS -->
+
+    <div class="card">
+
+
+        <div class="card-title">
+            My Tasks
+        </div>
+
+
+        {% if tasks %}
+
+
+            {% for task in tasks %}
+
+
+                <div class="task">
+
+
+                    <div class="task-header">
+
+                        <div class="task-title">
+
+                            {{ task.title }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="task-description">
+
+                        {{ task.description }}
+
+                    </div>
+
+
+                    <div class="badges">
+
+
+                        {% if task.priority == "High" %}
+
+                            <span
+                                class="badge priority-high"
+                            >
+                                High Priority
+                            </span>
+
+                        {% elif task.priority == "Medium" %}
+
+                            <span
+                                class="badge priority-medium"
+                            >
+                                Medium Priority
+                            </span>
+
+                        {% else %}
+
+                            <span
+                                class="badge priority-low"
+                            >
+                                Low Priority
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if task.status == "Completed" %}
+
+                            <span
+                                class="badge status-completed"
+                            >
+                                ✓ Completed
+                            </span>
+
+                        {% else %}
+
+                            <span
+                                class="badge status-pending"
+                            >
+                                ● Pending
+                            </span>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                    <div class="actions">
+
+
+                        {% if task.status != "Completed" %}
+
+                            <form
+                                action="/complete/{{ task.id }}"
+                                method="POST"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="action-button complete-button"
+                                >
+                                    ✓ Mark Complete
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+
+                        <form
+                            action="/delete/{{ task.id }}"
+                            method="POST"
+                        >
+
+                            <button
+                                type="submit"
+                                class="action-button delete-button"
+                            >
+                                🗑 Delete
+                            </button>
+
+                        </form>
+
+
+                    </div>
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📝
+                </div>
+
+                <p>
+                    No tasks yet. Add your first task!
+                </p>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
