@@ -1,15 +1,12 @@
-name: Docker CI
+name: Docker CI/CD
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,3 +15,14 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t student-task-manager .
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/student-task-manager
+            git pull origin main
+            docker compose up -d --build
